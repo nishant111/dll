@@ -11,10 +11,26 @@ typedef struct dll_node_{
 
 typedef struct dll_{
     dll_node_t *head;
+    /* Application will pass function to be used for matching */
+    int (*key_match_function)(void *, void *);
+    void (*print_db_function)(struct dll_ *);
+    int (*comparison_function)(void *, void *);
 }dll_t;
 
 dll_t*
 get_new_node();
+
+void
+register_key_match_callback(dll_t *, int (*key_match)(void*, void*));
+
+void
+register_print_callback(dll_t *, void (*print_function)(dll_t *));
+
+void
+register_comparison_callback(dll_t *, int (*comparison_function)(void*, void*));
+
+void *
+dll_search_by_key(dll_t *dll,void* key);
 
 int
 add_data_to_dll(dll_t *dll, void *app_data);
