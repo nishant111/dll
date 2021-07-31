@@ -20,3 +20,4 @@ clean:
 	rm application.o
 	rm libdll.a
 	rm exe
+	rm exe1

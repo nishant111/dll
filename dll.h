@@ -47,4 +47,14 @@ is_dll_empty (dll_t *dll);
 void
 drain_dll (dll_t *dll);
 
+#define ITERATE_LIST_BEGIN(dll, node) \
+    {							 \
+        dll_node_t * _node = NULL;                                     \
+        node = dll->head;                                \
+        for(;node!=NULL;node=_node)                       \
+        {                                                \
+            _node = node->right;                          \
+
+#define ITERATE_LIST_END }}
+
 #endif

@@ -76,13 +76,26 @@ void print_car_db(dll_t *car_db)
         return;
     dll_node_t *start = car_db->head;
     printf("************Car DB ******************\n");
+#if 0
+//Legacy code , now using iterative macro
     while(start!=NULL)
     {
         print_car_details(start->data);
         start=start->right;
     }
+#endif
+    dll_node_t *node_ptr = NULL;
+    car_t *data= NULL;
+    ITERATE_LIST_BEGIN(car_db, node_ptr)
+    {
+        data = (car_t *)node_ptr->data;
+        print_car_details(data);
+    }
+    ITERATE_LIST_END
+
     printf("**************Car DB end*************\n");
     return;
+
 }
 
 int comparison_person(void *existingData, void *newData)
@@ -90,6 +103,16 @@ int comparison_person(void *existingData, void *newData)
     person_t *existingPerson = (person_t*) existingData;
     person_t *newPerson = (person_t*) newData;
     if (existingPerson->age > newPerson->age)
+        return 1; /*New node is smaller */
+    else
+        return 0;
+}
+
+int comparison_car(void *existingData, void *newData)
+{
+    car_t *existingCar = (person_t*) existingData;
+    car_t *newCar = (person_t*) newData;
+    if (existingCar->makeYear > newCar->makeYear)
         return 1; /*New node is smaller */
     else
         return 0;
@@ -108,6 +131,8 @@ int main (int argc, char **argv)
     person_t *person6 = calloc(1, sizeof(person_t));
 
     car_t *car1 = calloc(1,sizeof(car_t));
+    car_t *car2 = calloc(1,sizeof(car_t));
+    car_t *car3 = calloc(1,sizeof(car_t));
 
     person1->name = "alice";  /* Read only string in RO data segment */
     person1->id = 1;
@@ -138,14 +163,26 @@ int main (int argc, char **argv)
     car1->chasisNo = "AABBCC";
     car1->makeYear = 2021;
     car1->makeCompany = "hyundai";
+    car2->name = "Indigo";
+    car2->chasisNo = "ddeeff";
+    car2->makeYear = 2010;
+    car2->makeCompany = "tata";
+    car3->name = "Wagonr";
+    car3->chasisNo = "gghhii";
+    car3->makeYear = 2008;
+    car3->makeCompany = "maruti";
 
     register_print_callback(person_db, print_person_db);
     register_key_match_callback(person_db, match_person_by_key);
     register_comparison_callback(person_db, comparison_person);
+
+    register_comparison_callback(car_db, comparison_car);
     register_print_callback(car_db, print_car_db);
     register_key_match_callback(car_db, match_car_by_key);
 
     dll_priority_insert(car_db, car1);
+    dll_priority_insert(car_db, car2);
+    dll_priority_insert(car_db, car3);
     dll_priority_insert(person_db, person1);
     dll_priority_insert(person_db, person2);
     dll_priority_insert(person_db, person3);
